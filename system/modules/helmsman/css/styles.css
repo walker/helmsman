@@ -1,0 +1,62 @@
+.longWrapper li, .lonelytable {
+	width: 900px;
+	margin: 0 auto;
+}
+
+.lonelysubtable {
+	width: 730px;
+	margin: 10px auto 10px auto;
+}
+
+.longWrapper li {
+	list-style-type: none;
+}
+
+.longWrapper table {
+	border-left: 0;
+	border-right: 0;
+}
+
+.longwrapper ol li.add {
+	text-indent: -9999px;
+}
+
+.delete-link a {
+	display: block;
+	text-indent: -9999px;
+	width: 16px;
+	height: 16px;
+	background: transparent url(/themes/cp_global_images/delete.png);
+}
+
+.addchild-link a {
+	display: block;
+	text-indent: -9999px;
+	width: 10px;
+	height: 10px;
+	background: transparent url(/themes/cp_global_images/add.png);
+}
+
+.moveup-link a {
+	display: block;
+	text-indent: -9999px;
+	width: 15px;
+	height: 16px;
+	/*
+	default
+	background: transparent url(/system/modules/helmsman/img/up.gif);
+	*/
+	background: transparent url(/console/modules/helmsman/img/up.gif);
+}
+
+.movedown-link a {
+	display: block;
+	text-indent: -9999px;
+	width: 15px;
+	height: 16px;
+	/*
+	default
+	background: transparent url(/system/modules/helmsman/img/down.gif);
+	*/
+	background: transparent url(/console/modules/helmsman/img/down.gif);
+}
