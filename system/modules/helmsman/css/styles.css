@@ -1,5 +1,5 @@
 .longWrapper li, .lonelytable {
-	width: 900px;
+	width: 800px;
 	margin: 0 auto;
 }
 
@@ -21,42 +21,39 @@
 	text-indent: -9999px;
 }
 
-.delete-link a {
-	display: block;
-	text-indent: -9999px;
-	width: 16px;
-	height: 16px;
-	background: transparent url(/themes/cp_global_images/delete.png);
+div.example-link {
+	width: 150px;
+	float: left;
 }
 
-.addchild-link a {
+a.handlebar img {
+	border: 0;
+	position: relative;
+	top: 5px;
+	padding-left: 20px;
+}
+
+a.delete-link img {
+	border: 0;
+	position: relative;
+	top: 5px;
+}
+
+/*#add-new-item {
+	width: 100%;
+	margin: 0 auto;
+}*/
+
+.add-new-item a {
+	float: right;
 	display: block;
 	text-indent: -9999px;
 	width: 10px;
 	height: 10px;
 	background: transparent url(/themes/cp_global_images/add.png);
+	margin-right: 5%;
 }
 
-.moveup-link a {
-	display: block;
-	text-indent: -9999px;
-	width: 15px;
-	height: 16px;
-	/*
-	default
-	background: transparent url(/system/modules/helmsman/img/up.gif);
-	*/
-	background: transparent url(/console/modules/helmsman/img/up.gif);
-}
-
-.movedown-link a {
-	display: block;
-	text-indent: -9999px;
-	width: 15px;
-	height: 16px;
-	/*
-	default
-	background: transparent url(/system/modules/helmsman/img/down.gif);
-	*/
-	background: transparent url(/console/modules/helmsman/img/down.gif);
+.add-new-item a:active {
+	border: 0;
 }
