@@ -164,15 +164,7 @@
 			global $DSP, $PREFS;
 			
 			if($depth==0) {
-				$return = $DSP->table_open(array('class' => 'lonelytable')).
-					"\r\n".
-					$DSP->table_row(array(
-									'cell1' => array('width' => "295px", 'text' => '&nbsp;'),
-									'cell2' => array('text' => 'Title', 'width' => '230px', 'align'=>'left'),
-									'cell3' => array('text' => 'Link', 'width' => '240px', 'align'=>'left'),
-									'cell4' => array('text' => '&nbsp;', 'colspan' => '5', 'align'=>'left', 'width'=>'160px'))).
-					"\r\n".
-					$DSP->table_close().
+				$return = $DSP->qdiv('top-labels', $DSP->qdiv('title-label', 'Title').$DSP->qdiv('link-label', 'Link')).
 					"\r\n".
 					'<ol id="master-list">'.
 					"\r\n";
@@ -276,10 +268,12 @@
 						$value['title'] = $value['link_title'];
 						$value['url'] = $value['link_url'];
 						
+						$value['slug'] = $this->__slug($value['link_title']);
+						
 						if(isset($current_parent)) {
-							$DB->query('INSERT INTO `exp_helmsman` (id, title, html_title, url, parent_id, sequence) VALUES (null, "'.addslashes($value['title']).'", "'.addslashes($value['html_title']).'", "'.addslashes($value['url']).'", '.$current_parent.', '.$counter.')');
+							$DB->query('INSERT INTO `exp_helmsman` (id, title, html_title, slug, url, parent_id, sequence) VALUES (null, "'.addslashes($value['title']).'", "'.addslashes($value['html_title']).'", "'.addslashes($value['slug']).'", "'.addslashes($value['url']).'", '.$current_parent.', '.$counter.')');
 						} else {
-							$DB->query('INSERT INTO `exp_helmsman` (id, title, html_title, url, parent_id, sequence) VALUES (null, "'.addslashes($value['title']).'", "'.addslashes($value['html_title']).'", "'.addslashes($value['url']).'", 0, '.$counter.')');
+							$DB->query('INSERT INTO `exp_helmsman` (id, title, html_title, slug, url, parent_id, sequence) VALUES (null, "'.addslashes($value['title']).'", "'.addslashes($value['html_title']).'", "'.addslashes($value['slug']).'", "'.addslashes($value['url']).'", 0, '.$counter.')');
 						}
 					
 						$the_data[$key] = $DB->insert_id;
@@ -310,6 +304,24 @@
 			return true;
 		}
 		
+		function __slug($string)
+		{
+			$settings = array('separator' => '_', 'length' => 100);
+			
+			$string = strtolower($string);
+			$string = preg_replace('/[^a-z0-9_]/i', $settings['separator'], $string);
+			$string = preg_replace('/' . preg_quote($settings['separator']) . '[' . preg_quote($settings['separator']) . ']*/', $settings['separator'], $string);
+			
+			if (strlen($string) > $settings['length'])
+			{
+				$string = substr($string, 0, $settings['length']);
+			}
+			
+			$string = preg_replace('/' . preg_quote($settings['separator']) . '$/', '', $string);
+			$string = preg_replace('/^' . preg_quote($settings['separator']) . '/', '', $string);
+			
+			return $string;
+		}
 		
 		function helmsman_module_install()
 		{
@@ -328,6 +340,8 @@
 			$sql[] = "CREATE TABLE IF NOT EXISTS `exp_helmsman` (
 												`id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT,
 												`title` VARCHAR(255) NOT NULL,
+												`html_title` VARCHAR(255) NOT NULL,
+												`slug` VARCHAR( 255 ) NOT NULL,
 												`url` VARCHAR(255) NOT NULL,
 												`parent_id` INT(6) UNSIGNED NOT NULL DEFAULT '0',
 												`sequence` INT(6) UNSIGNED NOT NULL,
