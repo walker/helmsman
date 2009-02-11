@@ -29,14 +29,14 @@ div.example-link {
 a.handlebar img {
 	border: 0;
 	position: relative;
-	top: 5px;
+	top: 3px;
 	padding-left: 20px;
 }
 
 a.delete-link img {
 	border: 0;
 	position: relative;
-	top: 5px;
+	top: 3px;
 }
 
 /*#add-new-item {
@@ -56,4 +56,22 @@ a.delete-link img {
 
 .add-new-item a:active {
 	border: 0;
+}
+
+
+ol#master-list li.sortable-navitem {
+	padding: 5px;
+	background-color: #fff;
+}
+
+ol#master-list li.alt {
+	background-color: #eef4f9;
+}
+
+ol#master-list li ol li.even {
+	background-color: #fff;
+}
+
+ol#master-list li ol li.odd {
+	background-color: #eef4f9;
 }

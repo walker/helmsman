@@ -189,7 +189,14 @@
 					$section['title'] = mb_convert_encoding($section['title'], 'utf-8');
 				}
 				
-				$return .= '<li class="sortable-navitem">'."\r\n".
+				if($counter%2==1) {
+					$extra_class = ' alt';
+				} else {
+					$extra_class = '';
+				}
+				
+				$return .= '<li class="sortable-navitem'.$extra_class.'">'."\r\n".
+				
 				$DSP->input_hidden('data['.$counter.'][link_depth]', $depth)."\r\n".
 				'<div class="example-link"><a href="'.substr($PREFS->core_ini['site_url'], 0, -1).$section['url'].'">'.$section['html_title'].'</a></div>'.
 				$DSP->input_text('data['.$counter.'][link_title]', $section['title'], '50', '255', 'leftmost input', '200px').
