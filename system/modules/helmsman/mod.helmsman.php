@@ -69,8 +69,8 @@
 				if(isset($section['children']) && count($section['children'])>0 && $this->void) {
 					$link = 'javascript:void(0);';
 				} else {
-					if(!strpos($section['url']), 'http://') {
-						$link = substr($PREFS->core_ini['site_url'], 0, -1).$section['url']
+					if(!strpos($section['url'], 'http://')) {
+						$link = substr($PREFS->core_ini['site_url'], 0, -1).$section['url'];
 					} else {
 						$link = $section['url'];
 					}
@@ -129,7 +129,7 @@
 		function contains_currently_open($sections) {
 			$currently_open = false;
 			foreach($sections as $section) {
-				if(rtrim($this->currently, '/')==rtrim($section['url'], '/') || $this->currently_open==$section['slug'])
+				if(rtrim($this->current, '/')==rtrim($section['url'], '/') || $this->currently_open==$section['slug'])
 				{
 					$currently_open = true;
 					break;
