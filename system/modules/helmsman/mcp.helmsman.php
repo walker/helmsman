@@ -2,7 +2,7 @@
 
 	class Helmsman_CP {
 		var $version = '0.1';
-		var $top_level_lock = false; //change to true to allow user to modify the top level of the menu
+		var $top_level_lock = false; //change to true to not allow the user to modify the top level of the menu
 		
 		function Helmsman_CP($switch=true)
 		{
@@ -81,8 +81,8 @@
 			<script type="text/javascript" src="'.$PREFS->core_ini['site_url'].$PREFS->default_ini['system_folder'].'/modules/helmsman/js/inestedsortable-1.0.1.pack.js"></script>
 			<script type="text/javascript" src="'.$PREFS->core_ini['site_url'].$PREFS->default_ini['system_folder'].'/modules/helmsman/js/scripts.js"></script>'.
 			'<script type="text/javascript">
-				function returnNewItem(counter) {
-					var item_string = "<li class=\'sortable-navitem\'><div class=\'hidden\'><input type=\'hidden\' name=\'data["+counter+"][link_depth]\' value=\'0\' /></div><div class=\'example-link\'><a href=\'\'></a></div><input  dir=\'ltr\'  style=\'width:200px;margin-left:250px;\' type=\'text\' name=\'data["+counter+"][link_title]\' id=\'data"+counter+"link_title\' value=\'\' size=\'50\' maxlength=\'255\' class=\'leftmost input\' /> <input  dir=\'ltr\'  style=\'width:200px\' type=\'text\' name=\'data["+counter+"][link_url]\' id=\'data"+counter+"link_url\' value=\'\' size=\'50\' maxlength=\'255\' class=\'input\'  /> <a href=\'javascript:void(0);\' title=\'Delete\' class=\'delete-link\'><img src=\'/themes/cp_global_images/delete.png\' alt=\'Delete\' title=\'Delete\' /></a><a href=\'javascript:void(0);\' title=\'Move\' class=\'handlebar\'><img src=\'/console/modules/helmsman/img/draggable.gif\' /></a></li>";
+				function returnNewItem(counter, the_level) {
+					var item_string = "<li class=\'sortable-navitem\'><div class=\'hidden\'><input type=\'hidden\' name=\'data["+counter+"][link_depth]\' value=\'"+the_level+"\' /></div><div class=\'example-link\'><a href=\'\'></a></div><input  dir=\'ltr\'  style=\'width:200px;margin-left:250px;\' type=\'text\' name=\'data["+counter+"][link_title]\' id=\'data"+counter+"link_title\' value=\'\' size=\'50\' maxlength=\'255\' class=\'leftmost input\' /> <input  dir=\'ltr\'  style=\'width:200px\' type=\'text\' name=\'data["+counter+"][link_url]\' id=\'data"+counter+"link_url\' value=\'\' size=\'50\' maxlength=\'255\' class=\'input\'  /> <a href=\'javascript:void(0);\' title=\'Delete\' class=\'delete-link\'><img src=\'/themes/cp_global_images/delete.png\' alt=\'Delete\' title=\'Delete\' /></a><a href=\'javascript:void(0);\' title=\'Move\' class=\'handlebar\'><img src=\'/console/modules/helmsman/img/draggable.gif\' /></a></li>";
 					return item_string;
 				}
 			</script>'.
@@ -170,7 +170,7 @@
 					'<ol id="master-list">'.
 					"\r\n";
 			} else {
-				$return = '<ol class="sub-list">'."\r\n".
+				$return = '<ol class="sub-list" id="sub'.$counter.'list">'."\r\n".
 					"\r\n";
 			}
 			
@@ -193,10 +193,12 @@
 				$return .= $extra_class.'">'."\r\n".
 				$DSP->input_hidden('data['.$counter.'][link_depth]', $depth)."\r\n".
 				'<div class="example-link"><a href="'.substr($PREFS->core_ini['site_url'], 0, -1).$section['url'].'">'.$section['html_title'].'</a></div>'.
-				$DSP->input_text('data['.$counter.'][link_title]', $section['title'], '50', '255', 'leftmost input', '200px').
-				$DSP->input_text('data['.$counter.'][link_url]', $section['url'], '50', '255', 'input', '200px').
-				$DSP->anchor('javascript:void(0);', '<img src="/themes/cp_global_images/delete.png" alt="Delete" title="Delete" />', 'title="Delete" class="delete-link"').
-				$DSP->anchor('javascript:void(0);', '<img src="/console/modules/helmsman/img/draggable.gif" />', 'title="Move" class="handlebar"');
+				$DSP->input_text('data['.$counter.'][link_title]', $section['title'], '50', '255', 'leftmost input', '200px', $this->input_extras($depth)).
+				$DSP->input_text('data['.$counter.'][link_url]', $section['url'], '50', '255', 'input', '200px', $this->input_extras($depth));
+				if(!$this->top_level_lock || ($this->top_level_lock && $depth>0)) {
+					$return .= $DSP->anchor('javascript:void(0);', '<img src="/themes/cp_global_images/delete.png" alt="Delete" title="Delete" />', 'title="Delete" class="delete-link"').
+					$DSP->anchor('javascript:void(0);', '<img src="/console/modules/helmsman/img/draggable.gif" />', 'title="Move" class="handlebar"');
+				}
 				$counter++;
 				if(isset($section['children']) && count($section['children'])>0) {
 					$pass_depth = $depth+1;
@@ -213,6 +215,15 @@
 					'<div id="current-count" style="display:none;">'.$counter.'</div>';
 			} else {
 				$return .= '</ol>'."\r\n";
+			}
+			return $return;
+		}
+		
+		function input_extras($depth) {
+			$return = '';
+			if($this->top_level_lock && $depth==0)
+			{
+				$return .= 'readonly';
 			}
 			return $return;
 		}
@@ -272,12 +283,14 @@
 						
 						$value['slug'] = $this->__slug($value['link_title']);
 						
-						if(isset($current_parent)) {
-							$DB->query('INSERT INTO `exp_helmsman` (id, title, html_title, slug, url, parent_id, sequence) VALUES (null, "'.addslashes($value['title']).'", "'.addslashes($value['html_title']).'", "'.addslashes($value['slug']).'", "'.addslashes($value['url']).'", '.$current_parent.', '.$counter.')');
-						} else {
-							$DB->query('INSERT INTO `exp_helmsman` (id, title, html_title, slug, url, parent_id, sequence) VALUES (null, "'.addslashes($value['title']).'", "'.addslashes($value['html_title']).'", "'.addslashes($value['slug']).'", "'.addslashes($value['url']).'", 0, '.$counter.')');
+						if(!$this->top_level_lock || ($this->top_level_lock && $current_parent>0)) {
+							if(isset($current_parent)) {
+								$DB->query('INSERT INTO `exp_helmsman` (id, title, html_title, slug, url, parent_id, sequence) VALUES (null, "'.addslashes($value['title']).'", "'.addslashes($value['html_title']).'", "'.addslashes($value['slug']).'", "'.addslashes($value['url']).'", '.$current_parent.', '.$counter.')');
+							} else {
+								$DB->query('INSERT INTO `exp_helmsman` (id, title, html_title, slug, url, parent_id, sequence) VALUES (null, "'.addslashes($value['title']).'", "'.addslashes($value['html_title']).'", "'.addslashes($value['slug']).'", "'.addslashes($value['url']).'", 0, '.$counter.')');
+							}
 						}
-					
+						
 						$the_data[$key] = $DB->insert_id;
 					}
 					$counter++;
