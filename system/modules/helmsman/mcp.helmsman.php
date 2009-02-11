@@ -2,11 +2,12 @@
 
 	class Helmsman_CP {
 		var $version = '0.1';
+		var $top_level_lock = false; //change to true to allow user to modify the top level of the menu
 		
 		function Helmsman_CP($switch=true)
 		{
 			global $IN;
-
+			
 			if ($switch)
 			{
 				switch($IN->GBL('P'))
@@ -187,8 +188,9 @@
 					$extra_class = '';
 				}
 				
-				$return .= '<li class="sortable-navitem'.$extra_class.'">'."\r\n".
-				
+				$return .= '<li class="';
+				if(!$this->top_level_lock || ($this->top_level_lock && $depth>0)) { $return .= 'sortable-navitem'; }
+				$return .= $extra_class.'">'."\r\n".
 				$DSP->input_hidden('data['.$counter.'][link_depth]', $depth)."\r\n".
 				'<div class="example-link"><a href="'.substr($PREFS->core_ini['site_url'], 0, -1).$section['url'].'">'.$section['html_title'].'</a></div>'.
 				$DSP->input_text('data['.$counter.'][link_title]', $section['title'], '50', '255', 'leftmost input', '200px').
