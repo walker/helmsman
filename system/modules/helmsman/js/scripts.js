@@ -14,11 +14,19 @@ jQuery(document).ready(function() {
 			jQuery('#master-list').append(returnNewItem(num, 0));
 		}
 		jQuery('#current-count').html(num_inc);
+		bindInputKeypresses();
 		bindDelete();
 		bindDeleteHover();
 		bindSortable();
 	});
-	
+	bindInputKeypresses();
+	bindDelete();
+	bindDeleteHover();
+	bindSortable();
+	resetMargin();
+});
+
+function bindInputKeypresses() {
 	jQuery('.input').keyup(function() {
 		if(jQuery(this).attr('class')=='leftmost input') {
 			var link = '<a href="'+jQuery(this).next().attr('value')+'">'+jQuery(this).attr('value')+'</a>';
@@ -27,11 +35,7 @@ jQuery(document).ready(function() {
 		}
 		jQuery(this).parent().children('.example-link').html(link);
 	});
-	bindDelete();
-	bindDeleteHover();
-	bindSortable();
-	resetMargin();
-});
+}
 
 function bindSortable() {
 	if(jQuery('#master-list').children('li').children('input').attr('readonly')==true) {

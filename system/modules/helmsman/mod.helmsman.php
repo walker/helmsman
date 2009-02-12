@@ -77,7 +77,7 @@
 				}
 				
 				$return .= $this->prefix.'navitem'.$extra_class.'" id="'.$this->prefix.$section['slug'].'">
-						<a href="'.$link.'">'.$section['html_title'].'</a>'."\r\n";
+						<a href="'.$link.'"><span>'.$section['html_title'].'<span></a>'."\r\n";
 				
 				$counter++;
 				if(isset($section['children']) && count($section['children'])>0) {
