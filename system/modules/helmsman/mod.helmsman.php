@@ -64,6 +64,8 @@
 				
 				$return .= "\r\n".'<li class="';
 				
+				if($section_counter==1) { $return .= 'first '; } else if($section_counter==$section_total) { $return .= 'last '; }
+				
 				if(rtrim($this->current, '/')==rtrim($section['url'], '/') || $this->current==$section['slug']) $return .= 'current ';
 				
 				if(isset($section['children']) && count($section['children'])>0 && $this->void) {
