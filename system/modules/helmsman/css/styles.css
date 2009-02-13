@@ -1,11 +1,17 @@
-.longWrapper li, .lonelytable {
-	width: 800px;
-	margin: 0 auto;
+.clear-hack {
+	clear: both;
+	height: 1px;
+	width: 100%;
 }
 
-.lonelysubtable {
-	width: 730px;
-	margin: 10px auto 10px auto;
+.longWrapper {
+	width: 900px;
+	margin: 0 auto;
+	list-style-type: none;
+}
+
+.longWrapper ul li {
+	width: 100%;
 }
 
 .longWrapper li {
@@ -21,19 +27,42 @@
 	text-indent: -9999px;
 }
 
+ol#master-list ol {
+	margin-top: 5px;
+	padding-bottom: 5px;
+}
+
 div.example-link {
 	width: 150px;
 	float: left;
+	position: relative;
+	top: 3px;
+}
+
+li input.input {
+	float: right;
+	margin-right: 10px;
 }
 
 a.handlebar img {
+	float: right;
 	border: 0;
 	position: relative;
 	top: 3px;
 	padding-left: 20px;
+	padding-right: 5px;
+}
+
+a.lock img {
+	float: right;
+	border: 0;
+	position: relative;
+	padding-left: 30px;
+	padding-right: 5px;
 }
 
 a.delete-link img {
+	float: right;
 	border: 0;
 	position: relative;
 	top: 3px;
@@ -51,16 +80,20 @@ a.delete-link img {
 	width: 10px;
 	height: 10px;
 	background: transparent url(/themes/cp_global_images/add.png);
-	margin-right: 5%;
+	margin-right: 1%;
 }
 
 .add-new-item a:active {
 	border: 0;
 }
 
+ol#master-list li {
+	padding: 5px 0 5px 5px;
+	background-color: #fff;
+}
 
-ol#master-list li.sortable-navitem {
-	padding: 5px;
+ol#master-list li ol li {
+	padding: 5px 0 5px 5px;
 	background-color: #fff;
 }
 
@@ -68,10 +101,26 @@ ol#master-list li.alt {
 	background-color: #eef4f9;
 }
 
-ol#master-list li ol li.even {
+ol#master-list li ol li {
 	background-color: #fff;
 }
 
-ol#master-list li ol li.odd {
+ol#master-list li ol li.sectionalt {
 	background-color: #eef4f9;
+}
+
+.longWrapper .top-labels .title-label {
+	margin-left: 420px;
+	width: 200px;
+	float: left;
+}
+
+.longWrapper .top-labels .link-label {
+	width: 200px;
+	margin-left: 630px;
+}
+
+.longWrapper .submit {
+	margin-left: 50px;
+	width: 100px;
 }
