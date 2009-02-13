@@ -1,7 +1,7 @@
 <?php
 
 	class Helmsman_CP {
-		var $version = '0.1';
+		var $version = '1.0';
 		var $top_level_lock = false; //change to true to not allow the user to modify the top level of the menu
 		
 		function Helmsman_CP($switch=true)
