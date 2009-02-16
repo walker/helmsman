@@ -1,8 +1,8 @@
 <?php
 
 	class Helmsman_CP {
-		var $version = '1.0';
-		var $top_level_lock = false; //change to true to not allow the user to modify the top level of the menu
+		var $version = '0.1';
+		var $top_level_lock = true; //change to true to not allow the user to modify the top level of the menu
 		
 		function Helmsman_CP($switch=true)
 		{
@@ -34,11 +34,6 @@
 				$the_data = $_POST['data'];
 				$the_data = array_merge($the_data);
 				
-				// echo '<pre>';
-				// print_r($the_data);
-				// echo '</pre>';
-				// exit();
-				
 				//save it
 				$this->navigation_save($the_data);
 			}
@@ -63,16 +58,8 @@
 			
 			$navigation_items = $this->get_navigation_array();
 			
-			// echo '<pre>';
-			// print_r($navigation_items);
-			// echo '</pre>';
-			// exit();
-			
 			$counter = 0;
 			$depth = 0;
-			
-			// print_r($GLOBALS);
-			// exit();
 			
 			$DSP->extra_css = $_SERVER['DOCUMENT_ROOT'].'/'.$PREFS->default_ini['system_folder'].'/modules/helmsman/css/styles.css';
 			
@@ -162,7 +149,7 @@
 		}
 		
 		function table_rows($sections, &$counter, $depth) {
-			global $DSP, $PREFS;
+			global $DSP, $PREFS, $LANG;
 			
 			if($depth==0) {
 				$return = $DSP->qdiv('top-labels', $DSP->qdiv('title-label', 'Title').$DSP->qdiv('link-label', 'Link')).
@@ -213,7 +200,7 @@
 			if($depth==0) {
 				$return .= '</ol>'.
 					'<div id="serialized"><textarea style="display:none;" name="serialized_data" id="serialized_data">&nbsp;</textarea></div>'.
-					$DSP->input_submit('Save').
+					$DSP->input_submit($LANG->line('helmsman_save')).
 					$DSP->form_close().
 					'<div id="current-count" style="display:none;">'.$counter.'</div>';
 			} else {
