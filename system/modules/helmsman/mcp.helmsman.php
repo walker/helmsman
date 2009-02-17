@@ -1,30 +1,29 @@
 <?php
 
-	class Helmsman_CP {
-		var $version = '0.1';
-		var $top_level_lock = true; //change to true to not allow the user to modify the top level of the menu
+	class Helmsman_CP
+	{
+		//Version of Helmsman Control Panel
+		var $version = '1.0.3';
 		
-		function Helmsman_CP($switch=true)
+		//change to true to not allow the user to modify the top level of the menu
+		var $top_level_lock = true;
+		
+		/**
+		 * Constructor function that kicks off the main Helmsman control panel page
+		 *
+		 * @access	public
+		 */
+		function Helmsman_CP()
 		{
-			global $IN;
-			
-			if ($switch)
-			{
-				switch($IN->GBL('P'))
-				{
-					case 'delete':
-						$this->delete_nav_item();
-						break;
-					case 'add':
-						$this->modify_nav_item();
-						break;
-					default:
-						$this->helmsman_home();
-						break;
-				}
-			}
+			$this->helmsman_home();
+			break;
 		}
 		
+		/**
+		 * Constructs the Helmsman control panel by modifying the $DSP's title, crumb, and body variables with the data retrieved from the other Helmsman functions
+		 *
+		 * @access	public
+		 */
 		function helmsman_home()
 		{
 			global $DSP, $LANG, $PREFS;
@@ -76,29 +75,29 @@
 				$DSP->qdiv('longWrapper',
 					$DSP->qdiv('add-new-item', '<a href="javascript:void(0);">Add another navigation item.</a>').
 					$open_form.
-					$this->table_rows($navigation_items, $counter, $depth)
+					$this->output_navigation_items_forms($navigation_items, $counter, $depth)
 				);
-			
-			// $DSP->body .= $DSP->qdiv('itemWrapper', $DSP->heading($DSP->anchor(BASE.
-			// 																	AMP.'C=modules'.
-			// 																	AMP.'M=helmsman'.
-			// 																	AMP.'P=add',
-			// 																	$LANG->line('add_nav_item')),
-			// 																	5));
-			// 
-			// $DSP->body .= $DSP->qdiv('itemWrapper', $DSP->heading($DSP->anchor(BASE.
-			// 																	AMP.'C=modules'.
-			// 																	AMP.'M=helmsman'.
-			// 																	AMP.'P=modify',
-			// 																	$LANG->line('modify_nav_item')),
-			// 																	5));
 		}
 		
+		/**
+		 * Takes incoming string and replaces html-encoded entities
+		 *
+		 * @access	public
+		 * @param	string $text The text to make safe
+		 * @return	string
+		 */
 		function incoming_entities($text)
 		{
 			return preg_replace("/&(?![#a-z0-9]+;)/i", "x%x%", $text);
 		}
 		
+		/**
+		 * checks to see if mb_encode_numericentity function is available and then uses it, if not uses htmlentities to encode the input string
+		 *
+		 * @access	public
+		 * @param	string $text string to encode as entities
+		 * @return	string
+		 */
 		function encode_entities($text)
 		{
 			return (function_exists('mb_encode_numericentity'))
@@ -106,11 +105,25 @@
 			:	 htmlentities($text, ENT_NOQUOTES, "utf-8");
 		}
 		
+		/**
+		 * Encodes a character as an HTML numeric string reference
+		 *
+		 * @access	public
+		 * @param	string $text number that tells function the current depth of the navigation
+		 * @param	string optional $charset tells the function if the current section needs is already set to open
+		 * @return	string
+		 */
 		function encode_high($text, $charset = "UTF-8")
 		{
 			return mb_encode_numericentity($text, $this->cmap(), $charset);
 		}
 		
+		/**
+		 * Returns the array that specifies code area to convert.
+		 *
+		 * @access	public
+		 * @return	array
+		 */
 		function cmap()
 		{
 			$f = 0xffff;
@@ -119,7 +132,14 @@
 			return $cmap;
 		}
 		
-		function get_navigation_array() {
+		/**
+		 * Grabs the first level of the navigation and kicks off the navigation array construction iterator
+		 *
+		 * @access	public
+		 * @return	array
+		 */
+		function get_navigation_array()
+		{
 			global $DB;
 			
 			$result = $DB->query("SELECT parent_id FROM `exp_helmsman` WHERE parent_id<>0 GROUP BY parent_id");
@@ -129,26 +149,46 @@
 			return $this->get_navigation_iterator($top_level->result);
 		}
 		
-		function get_navigation_iterator($results) {
+		/**
+		 * Constructs the top level navigation into formatted array and then recursively loops through to get the sub-levels and construct them
+		 *
+		 * @access	public
+		 * @param	array $sections that contains the current level's navigation items
+		 * @return	array
+		 */
+		function get_navigation_iterator($results)
+		{
 			global $DB;
 			
 			$navigation = array();
 			
-			foreach($results as $nav_item) {
+			foreach($results as $nav_item)
+			{
 				$navigation[$nav_item['id']] = array(
 					"title" => $nav_item['title'],
 					"html_title" => $nav_item['html_title'],
 					"url" => $nav_item['url'],
 				);
 				$children = $DB->query("SELECT * FROM `exp_helmsman` WHERE parent_id=".$nav_item['id']." ORDER BY sequence ASC");
-				if(count($children->result)>0) {
+				if(count($children->result)>0)
+				{
 					$navigation[$nav_item['id']]['children'] = $this->get_navigation_iterator($children->result);
 				}
 			}
 			return $navigation;
 		}
 		
-		function table_rows($sections, &$counter, $depth) {
+		/**
+		 * Recursive function that outputs the final navigation form items and closes the form
+		 *
+		 * @access	public
+		 * @param	array $sections that contains the current level's navigation items
+		 * @param	int $counter the overall counter for navigation items
+		 * @param	int $depth number that tells function the current depth of the navigation
+		 * @return	string
+		 */
+		function output_navigation_items_forms($sections, &$counter, $depth)
+		{
 			global $DSP, $PREFS, $LANG;
 			
 			if($depth==0) {
@@ -164,19 +204,27 @@
 			$section_counter = 1;
 			$section_total = count($sections);
 			
-			foreach($sections as $key => $section) {
-				if(!mb_check_encoding($section['title'], 'utf-8')) {
+			foreach($sections as $key => $section)
+			{
+				if(!mb_check_encoding($section['title'], 'utf-8'))
+				{
 					$section['title'] = mb_convert_encoding($section['title'], 'utf-8');
 				}
 				
-				if($section_counter%2==1) {
+				if($section_counter%2==1)
+				{
 					$extra_class = ' alt';
 				} else {
 					$extra_class = '';
 				}
 				
 				$return .= '<li class="';
-				if(!$this->top_level_lock || ($this->top_level_lock && $depth>0)) { $return .= 'sortable-navitem'; }
+				
+				if(!$this->top_level_lock || ($this->top_level_lock && $depth>0))
+				{
+					$return .= 'sortable-navitem';
+				}
+				
 				$return .= $extra_class.'">'."\r\n".
 				$DSP->input_hidden('data['.$counter.'][link_depth]', $depth)."\r\n".
 				'<div class="example-link"><a href="'.substr($PREFS->core_ini['site_url'], 0, -1).$section['url'].'">'.$section['html_title'].'</a></div>';
@@ -192,12 +240,14 @@
 				$counter++;
 				if(isset($section['children']) && count($section['children'])>0) {
 					$pass_depth = $depth+1;
-					$return .= $this->table_rows($section['children'], $counter, $pass_depth)."\r\n";
+					$return .= $this->output_navigation_items_forms($section['children'], $counter, $pass_depth)."\r\n";
 				}
 				$return .= '</li>'."\r\n";
 				$section_counter++;
 			}
-			if($depth==0) {
+			
+			if($depth==0)
+			{
 				$return .= '</ol>'.
 					'<div id="serialized"><textarea style="display:none;" name="serialized_data" id="serialized_data">&nbsp;</textarea></div>'.
 					$DSP->input_submit($LANG->line('helmsman_save')).
@@ -206,9 +256,17 @@
 			} else {
 				$return .= '</ol>'."\r\n";
 			}
+			
 			return $return;
 		}
 		
+		/**
+		 * Function that currently sets only one extra option, but could handle others. Currently sets the read-only status on inputs if $this->top_level_lock is on
+		 *
+		 * @access	public
+		 * @param	int $depth number that tells function the current depth of the navigation
+		 * @return	string
+		 */
 		function input_extras($depth) {
 			$return = '';
 			if($this->top_level_lock && $depth==0)
@@ -218,6 +276,13 @@
 			return $return;
 		}
 		
+		/**
+		 * Removes all the navigation so that the "new" nav can be built up from scratch and then kicks off the save iterator
+		 *
+		 * @access	public
+		 * @param	array $navigation_items takes the posted form data
+		 * @return	boolean
+		 */
 		function navigation_save($navigation_items)
 		{
 			global $DB, $PREFS;
@@ -231,6 +296,14 @@
 			return true;
 		}
 		
+		/**
+		 * Loops through the form data and saves the items
+		 *
+		 * @access	public
+		 * @param	array $the_data the posted array of form elements
+		 * @param	int $current_depth number that tells function the current depth of the navigation
+		 * @return	boolean
+		 */
 		function save_iterator($the_data, $current_depth=0) {
 			global $DB, $PREFS;
 			
@@ -287,17 +360,25 @@
 				}
 			}
 			
-			$this->unsetter($the_data);
+			$this->array_unsetter($the_data);
 			
 			return true;
 		}
 		
-		function unsetter($the_data) {
+		/**
+		 * Unsets navigation items without sub-navigation and renumbers the indices of the navigation array
+		 *
+		 * @access	public
+		 * @param	int $depth number that tells function the current depth of the navigation
+		 * @return	string
+		 */
+		function array_unsetter($the_data) {
 			if(!empty($the_data))
 			{
 				$the_data = array_merge($the_data);
 				foreach($the_data as $key => $value) {
-					if(count($the_data[$key])==1 && isset($the_data[$key+1]) && count($the_data[$key+1])==1) {
+					if(count($the_data[$key])==1 && isset($the_data[$key+1]) && count($the_data[$key+1])==1)
+					{
 						unset($the_data[$key]);
 					} else if(count($the_data[$key])==1 && !isset($the_data[$key+1])) {
 						unset($the_data[$key]);
@@ -309,7 +390,14 @@
 			return true;
 		}
 		
-		function __slug($string)
+		/**
+		 * Creates a slug from a string
+		 *
+		 * @access	public
+		 * @param	string $string the string that needs to be turned into a slug
+		 * @return	string
+		 */
+		function create_slug($string)
 		{
 			$settings = array('separator' => '_', 'length' => 100);
 			
@@ -328,6 +416,12 @@
 			return $string;
 		}
 		
+		/**
+		 * Installs the Helmsman module - adds it to various parts of the DB and creates the Helmsman-specific table
+		 *
+		 * @access	public
+		 * @return	boolean
+		 */
 		function helmsman_module_install()
 		{
 			global $DB;
@@ -360,6 +454,12 @@
 			return true;
 		}
 
+		/**
+		 * Un-installs the Helmsman module (removes it from the various parts of the database)
+		 *
+		 * @access	public
+		 * @return	boolean
+		 */
 		function helmsman_module_deinstall()
 		{
 			global $DB;
@@ -395,4 +495,5 @@
 		
 	}
 
-?>
+	/* End of file mcp.helmsman.php */
+	/* Location: ./system/modules/helmsman/mcp.helmsman.php */

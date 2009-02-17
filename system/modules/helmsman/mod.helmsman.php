@@ -4,6 +4,12 @@
 		
 		var $return_data = '';
 		
+		/**
+		 * Constructor class that makes sure Helmsman is set up and ready
+		 *
+		 * @access	public
+		 * @return	string
+		 */
 		function Helmsman()
 		{
 			global $TMPL;
@@ -27,6 +33,12 @@
 			return $this->return_data;
 		}
 		
+		/**
+		 * Constructor class that makes sure Helmsman is set up and ready
+		 *
+		 * @access	public
+		 * @return	string
+		 */
 		function construct_menu() {
 			$counter = 0;
 			$depth = 0;
@@ -34,6 +46,16 @@
 			return $this->items($this->nav_array, $counter, $depth);
 		}
 		
+		/**
+		 * Recursive function that outputs the final navigation list
+		 *
+		 * @access	public
+		 * @param	array $sections that contains the current level's navigation items
+		 * @param	int $counter the overall counter for navigation items
+		 * @param	int $depth number that tells function the current depth of the navigation
+		 * @param	boolean optional $currently_open tells the function if the current section needs is already set to open
+		 * @return	string
+		 */
 		function items($sections, &$counter, $depth, $currently_open=false) {
 			global $PREFS;
 			
@@ -95,6 +117,12 @@
 			return $return;
 		}
 		
+		/**
+		 * Grabs the first level of the navigation and kicks off the navigation array construction iterator
+		 *
+		 * @access	public
+		 * @return	array
+		 */
 		function get_navigation_array()
 		{
 			
@@ -107,6 +135,13 @@
 			return $this->get_navigation_iterator($top_level->result);
 		}
 		
+		/**
+		 * Constructs the top level navigation into formatted array and then recursively loops through to get the sub-levels and construct them
+		 *
+		 * @access	public
+		 * @param	array $sections that contains the current level's navigation items
+		 * @return	array
+		 */
 		function get_navigation_iterator($results) {
 			global $DB;
 			
@@ -128,6 +163,13 @@
 			return $navigation;
 		}
 		
+		/**
+		 * Figures out if the current section contains the currently open item (do not use on top level of nav)
+		 *
+		 * @access	public
+		 * @param	array $sections the navigation array for a section of the navigation
+		 * @return	boolean
+		 */
 		function contains_currently_open($sections) {
 			$currently_open = false;
 			foreach($sections as $section) {
@@ -146,5 +188,6 @@
 			return $currently_open;
 		}
 	}
-
-?>
+	
+	/* End of file mod.helmsman.php */
+	/* Location: ./system/modules/helmsman/mod.helmsman.php */
