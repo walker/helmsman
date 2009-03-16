@@ -107,7 +107,11 @@
 					}
 				}
 				
-				$return .= $this->prefix.'navitem'.$extra_class.'" id="'.$this->prefix.$section['slug'].'">
+				$return .= $this->prefix.'navitem'.$extra_class.'"';
+				if($depth==0) {
+ 					$return .= ' id="'.$this->prefix.$section['slug'].'"';
+				}
+				$return .= '>
 						<a href="'.$link.'"><span>'.$section['html_title'].'</span></a>'."\r\n";
 				
 				$counter++;
@@ -125,15 +129,15 @@
 		}
 		
 		function construct_sub_menu($sections, &$counter, $depth, $currently_open=false) {
+			global $IN;
 			$return = '';
 			foreach($sections as $key => $section) {
+				$test_items = explode('/', rtrim($section['slug'], '/'));
+				
 				if(rtrim($this->current, '/')==rtrim($section['url'], '/') || $this->current==$section['slug'] || (isset($IN->SEGS[1]) && $IN->SEGS[1]==$test_items[0]) || $this->currently_open==$section['slug']) {
 					if(isset($section['children']) && count($section['children'])>0) {
-						$currently_open = $this->contains_currently_open($section['children']);
-						if($currently_open) {
-							$pass_depth = $depth+1;
-							$return .= $this->items($section['children'], $counter, $pass_depth, $currently_open)."\r\n";
-						}
+						$pass_depth = $depth+1;
+						$return .= $this->items($section['children'], $counter, $pass_depth, $currently_open)."\r\n";
 					}
 				}
 			}
