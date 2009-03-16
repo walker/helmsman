@@ -15,8 +15,9 @@
 		 */
 		function Helmsman_CP()
 		{
-			$this->helmsman_home();
-			break;
+			if(!isset($_GET['M']) || (isset($_GET['M']) && $_GET['M']!='INST')) {
+				$this->helmsman_home();
+			}
 		}
 		
 		/**
@@ -68,7 +69,7 @@
 			<script type="text/javascript" src="'.$PREFS->core_ini['site_url'].$PREFS->default_ini['system_folder'].'/modules/helmsman/js/scripts.js"></script>'.
 			'<script type="text/javascript">
 				function returnNewItem(counter, the_level) {
-					var item_string = "<li class=\'sortable-navitem\'><div class=\'hidden\'><input type=\'hidden\' name=\'data["+counter+"][link_depth]\' value=\'"+the_level+"\' /></div><div class=\'example-link\'><a href=\'\'></a></div><input  dir=\'ltr\'  style=\'width:200px;\' type=\'text\' name=\'data["+counter+"][link_title]\' id=\'data"+counter+"link_title\' value=\'\' size=\'50\' maxlength=\'255\' class=\'leftmost input\' /> <input  dir=\'ltr\'  style=\'width:200px\' type=\'text\' name=\'data["+counter+"][link_url]\' id=\'data"+counter+"link_url\' value=\'\' size=\'50\' maxlength=\'255\' class=\'input\'  /> <a href=\'javascript:void(0);\' title=\'Delete\' class=\'delete-link\'><img src=\'/themes/cp_global_images/delete.png\' alt=\'Delete\' title=\'Delete\' /></a><a href=\'javascript:void(0);\' title=\'Move\' class=\'handlebar\'><img src=\'/console/modules/helmsman/img/draggable.gif\' /></a></li>";
+					var item_string = "<li class=\'sortable-navitem\'><div class=\'hidden\'><input type=\'hidden\' name=\'data["+counter+"][link_depth]\' value=\'\' /></div><div class=\'example-link\'><a href=\'#\'>&nbsp;</a></div><a href=\'javascript:void(0);\' title=\'Move\' class=\'handlebar\'><img src=\'/console/modules/helmsman/img/draggable.gif\' /></a><a href=\'javascript:void(0);\' title=\'Delete\' class=\'delete-link\'><img src=\'/themes/cp_global_images/delete.png\' alt=\'Delete\' title=\'Delete\' /></a><input dir=\'ltr\'  style=\'width:200px\' type=\'text\' name=\'data["+counter+"][link_url]\' id=\'data"+counter+"link_url\' value=\'\' size=\'50\' maxlength=\'255\' class=\'input\' /><input  dir=\'ltr\'  style=\'width:200px\' type=\'text\' name=\'data["+counter+"][link_title]\' id=\'data"+counter+"link_title\' value=\'\' size=\'50\' maxlength=\'255\' class=\'leftmost input\' /><div class=\'clear-hack\'>&nbsp;</div></li>";
 					return item_string;
 				}
 			</script>'.
@@ -287,7 +288,13 @@
 		{
 			global $DB, $PREFS;
 			
-			$delete_all = $DB->query('DELETE FROM `exp_helmsman`');
+			// if($this->top_level_lock) {
+			// 	echo 'DELETE FROM `exp_helmsman` WHERE `parent_id`<>0';
+			// 	$delete_all = $DB->query('DELETE FROM `exp_helmsman` WHERE `parent_id`<>0');
+			// } else {
+				// echo 'DELETE FROM `exp_helmsman`';
+				$delete_all = $DB->query('DELETE FROM `exp_helmsman`');
+			// }
 			
 			$this->save_iterator($navigation_items);
 			
@@ -344,15 +351,17 @@
 						$value['title'] = $value['link_title'];
 						$value['url'] = $value['link_url'];
 						
-						$value['slug'] = $this->__slug($value['link_title']);
+						$value['slug'] = $this->create_slug($value['link_title']);
 						
-						if(!$this->top_level_lock || ($this->top_level_lock && $current_parent>0)) {
+						// if(!$this->top_level_lock || ($this->top_level_lock && isset($current_parent) && $current_parent>0)) {
 							if(isset($current_parent)) {
+								// echo 'INSERT INTO `exp_helmsman` (id, title, html_title, slug, url, parent_id, sequence) VALUES (null, "'.addslashes($value['title']).'", "'.addslashes($value['html_title']).'", "'.addslashes($value['slug']).'", "'.addslashes($value['url']).'", '.$current_parent.', '.$counter.')';
 								$DB->query('INSERT INTO `exp_helmsman` (id, title, html_title, slug, url, parent_id, sequence) VALUES (null, "'.addslashes($value['title']).'", "'.addslashes($value['html_title']).'", "'.addslashes($value['slug']).'", "'.addslashes($value['url']).'", '.$current_parent.', '.$counter.')');
 							} else {
+								// echo 'INSERT INTO `exp_helmsman` (id, title, html_title, slug, url, parent_id, sequence) VALUES (null, "'.addslashes($value['title']).'", "'.addslashes($value['html_title']).'", "'.addslashes($value['slug']).'", "'.addslashes($value['url']).'", 0, '.$counter.')';
 								$DB->query('INSERT INTO `exp_helmsman` (id, title, html_title, slug, url, parent_id, sequence) VALUES (null, "'.addslashes($value['title']).'", "'.addslashes($value['html_title']).'", "'.addslashes($value['slug']).'", "'.addslashes($value['url']).'", 0, '.$counter.')');
 							}
-						}
+						// }
 						
 						$the_data[$key] = $DB->insert_id;
 					}
@@ -426,16 +435,6 @@
 		{
 			global $DB;
 			
-			$sql[] = "INSERT INTO exp_modules (module_id,
-												module_name,
-												module_version,
-												has_cp_backend)
-												VALUES
-												(null,
-												'Helmsman',
-												'$this->version',
-												'y')";
-			
 			$sql[] = "CREATE TABLE IF NOT EXISTS `exp_helmsman` (
 												`id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT,
 												`title` VARCHAR(255) NOT NULL,
@@ -446,6 +445,16 @@
 												`sequence` INT(6) UNSIGNED NOT NULL,
 												PRIMARY KEY (`id`),
 												INDEX (  `parent_id` ));";
+
+			$sql[] = "INSERT INTO exp_modules (module_id,
+												module_name,
+												module_version,
+												has_cp_backend)
+												VALUES
+												(null,
+												'Helmsman',
+												'$this->version',
+												'y')";
 			
 			foreach($sql as $query)
 			{

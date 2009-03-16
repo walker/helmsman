@@ -43,6 +43,8 @@ function bindSortable() {
 				accept: 'sortable-navitem',
 				handle: '.handlebar',
 				nestingPxSpace: 20,
+				helperclass: 'dropzone',
+				opacity: 0.6,
 				onChange: function(serialized) {
 					jQuery.each(jQuery('#master-list li'), function() {
 						var anid = jQuery(this).parent()[0].id;

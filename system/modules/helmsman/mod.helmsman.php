@@ -16,6 +16,8 @@
 			
 			/* Construct Items */
 			$this->collapse_level = ($TMPL->fetch_param('collapse_level')!==false) ? $TMPL->fetch_param('collapse_level') : null;
+			$this->separate_menus = ($TMPL->fetch_param('separate')!==false) ? true : false;
+			$this->sub_menu = ($TMPL->fetch_param('is_sub')!==false) ? true : false;
 			settype($this->collapse_level, "integer");
 			
 			$this->void = ($TMPL->fetch_param('void')) ? true : false;
@@ -43,7 +45,11 @@
 			$counter = 0;
 			$depth = 0;
 			
-			return $this->items($this->nav_array, $counter, $depth);
+			if(!$this->sub_menu) {
+				return $this->items($this->nav_array, $counter, $depth);
+			} else {
+				return $this->construct_sub_menu($this->nav_array, $counter, $depth);
+			}
 		}
 		
 		/**
@@ -57,7 +63,7 @@
 		 * @return	string
 		 */
 		function items($sections, &$counter, $depth, $currently_open=false) {
-			global $PREFS;
+			global $PREFS, $IN;
 			
 			if($depth==0) {
 				$return = '<'.$this->display_type.' id="'.$this->prefix.'navMain">'."\r\n";
@@ -88,7 +94,8 @@
 				
 				if($section_counter==1) { $return .= 'first '; } else if($section_counter==$section_total) { $return .= 'last '; }
 				
-				if(rtrim($this->current, '/')==rtrim($section['url'], '/') || $this->current==$section['slug']) $return .= 'current ';
+				$test_items = explode('/', rtrim($section['slug'], '/'));
+				if(rtrim($this->current, '/')==rtrim($section['url'], '/') || $this->current==$section['slug'] || (isset($IN->SEGS[1]) && $IN->SEGS[1]==$test_items[0])) $return .= 'current ';
 				
 				if(isset($section['children']) && count($section['children'])>0 && $this->void) {
 					$link = 'javascript:void(0);';
@@ -101,10 +108,10 @@
 				}
 				
 				$return .= $this->prefix.'navitem'.$extra_class.'" id="'.$this->prefix.$section['slug'].'">
-						<a href="'.$link.'"><span>'.$section['html_title'].'<span></a>'."\r\n";
+						<a href="'.$link.'"><span>'.$section['html_title'].'</span></a>'."\r\n";
 				
 				$counter++;
-				if(isset($section['children']) && count($section['children'])>0) {
+				if(isset($section['children']) && count($section['children'])>0 && !$this->separate_menus) {
 					$pass_depth = $depth+1;
 					$return .= $this->items($section['children'], $counter, $pass_depth, $currently_open)."\r\n";
 				}
@@ -114,6 +121,22 @@
 			
 			$return .= '</'.$this->display_type.'>'."\r\n";
 			
+			return $return;
+		}
+		
+		function construct_sub_menu($sections, &$counter, $depth, $currently_open=false) {
+			$return = '';
+			foreach($sections as $key => $section) {
+				if(rtrim($this->current, '/')==rtrim($section['url'], '/') || $this->current==$section['slug'] || (isset($IN->SEGS[1]) && $IN->SEGS[1]==$test_items[0]) || $this->currently_open==$section['slug']) {
+					if(isset($section['children']) && count($section['children'])>0) {
+						$currently_open = $this->contains_currently_open($section['children']);
+						if($currently_open) {
+							$pass_depth = $depth+1;
+							$return .= $this->items($section['children'], $counter, $pass_depth, $currently_open)."\r\n";
+						}
+					}
+				}
+			}
 			return $return;
 		}
 		

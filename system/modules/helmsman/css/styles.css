@@ -124,3 +124,7 @@ ol#master-list li ol li.sectionalt {
 	margin-left: 50px;
 	width: 100px;
 }
+
+.dropzone {
+	border-top: 3px solid #999;
+}

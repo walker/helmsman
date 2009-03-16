@@ -23,6 +23,8 @@ Front-end Use
 	display_type: can be set to "ol" or "ul". Defaults to "ul"
 	prefix: specify with a value of "yes" or "true" and the "helm-" prefix will be attached to all id & class attributes output to the menu's structure. (This allows Helmsman to avoid colliding with other IDs and Classes in the html of your page).
 	void: If set, this causes any navigation element with child elements to have it's "href" attribute set to have no action. These item will then only work as part of the accordion structure, they will not link anywhere, even if a link is specified for them in the back-end.
+	separate: can be set to 0 or 1, defaults to 0 (not deparate) outputs everything as 1 menu. if set please use other tag {exp:helmsman is_sub="true"} to output the submenu on sub-pages.
+	is_sub: can be set to "true" do not put in helmsman tag if this is not the sub menu you want output.
 	
 
 	Once you have configured the top-level of the menu you are going to be managing using this module, you can edit the mcp.helmsman.php file and turn off the ability to edit that level. This switch is within the code so that site developer & designers do not have to worry about a client or end-user of the admin console messing with the top level of the menu.
