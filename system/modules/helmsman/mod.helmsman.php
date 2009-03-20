@@ -132,7 +132,7 @@
 			global $IN;
 			$return = '';
 			foreach($sections as $key => $section) {
-				$test_items = explode('/', rtrim($section['slug'], '/'));
+				$test_items = explode('/', trim($section['url'], '/'));
 				
 				if(rtrim($this->current, '/')==rtrim($section['url'], '/') || $this->current==$section['slug'] || (isset($IN->SEGS[1]) && $IN->SEGS[1]==$test_items[0]) || $this->currently_open==$section['slug']) {
 					if(isset($section['children']) && count($section['children'])>0) {

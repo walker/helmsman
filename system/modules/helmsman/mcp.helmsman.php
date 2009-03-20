@@ -3,7 +3,7 @@
 	class Helmsman_CP
 	{
 		//Version of Helmsman Control Panel
-		var $version = '1.0.3';
+		var $version = '1.0.3.1';
 		
 		//change to true to not allow the user to modify the top level of the menu
 		var $top_level_lock = false;
