@@ -27,4 +27,4 @@ Front-end Use
 	is_sub: can be set to "true" do not put in helmsman tag if this is not the sub menu you want output.
 	
 
-	Once you have configured the top-level of the menu you are going to be managing using this module, you can edit the mcp.helmsman.php file and turn off the ability to edit that level. This switch is within the code so that site developer & designers do not have to worry about a client or end-user of the admin console messing with the top level of the menu.
+	Once you have configured the top-level of the menu you are going to be managing using this module, you can edit the mcp.helmsman.php file and turn off the ability to edit that level (change false to true on line 9 of mcp.helmsman.php). This switch is within the code so that site developer & designers do not have to worry about a client or end-user of the admin console messing with the top level of the menu.
