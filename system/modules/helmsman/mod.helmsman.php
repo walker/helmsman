@@ -75,7 +75,7 @@
 					}
 					if($depth>=$this->collapse_level && !$currently_open) {
 						$return .= ' '.$this->prefix.'closed-section';
-					} else if($currently_open) {
+					} else if($currently_open && $depth!=1) {
 						$return .= ' '.$this->prefix.'open-section';
 					}
 				}

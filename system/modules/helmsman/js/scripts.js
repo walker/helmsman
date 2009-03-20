@@ -28,9 +28,9 @@ jQuery(document).ready(function() {
 function bindInputKeypresses() {
 	jQuery('.input').keyup(function() {
 		if(jQuery(this).attr('class')=='leftmost input') {
-			var link = '<a href="'+jQuery(this).next().attr('value')+'">'+jQuery(this).attr('value')+'</a>';
+			var link = '<a href="'+jQuery(this).prev().attr('value')+'">'+jQuery(this).attr('value')+'</a>';
 		} else {
-			var link = '<a href="'+jQuery(this).attr('value')+'">'+jQuery(this).prev().attr('value')+'</a>';
+			var link = '<a href="'+jQuery(this).attr('value')+'">'+jQuery(this).next().attr('value')+'</a>';
 		}
 		jQuery(this).parent().children('.example-link').html(link);
 	});
@@ -73,6 +73,8 @@ function bindSortable() {
 			accept: 'sortable-navitem',
 			handle: '.handlebar',
 			nestingPxSpace: 20,
+			helperclass: 'dropzone',
+			opacity: 0.6,
 			onChange: function(serialized) {
 				jQuery.each(jQuery('#master-list li'), function() {
 					var anid = jQuery(this).parent()[0].id;
@@ -103,7 +105,7 @@ function bindDeleteHover() {
 		// console.log(jQuery(this).parent().html());
 		jQuery(this).parent().css('background-color', 'pink');
 	}, function() {
-		jQuery(this).parent().css('background-color', 'transparent');
+		jQuery(this).parent().css('background-color', '');
 	});
 }
 

@@ -3,10 +3,10 @@
 	class Helmsman_CP
 	{
 		//Version of Helmsman Control Panel
-		var $version = '1.0.3';
+		var $version = '1.0.4';
 		
 		//change to true to not allow the user to modify the top level of the menu
-		var $top_level_lock = true;
+		var $top_level_lock = false;
 		
 		/**
 		 * Constructor function that kicks off the main Helmsman control panel page
@@ -63,7 +63,7 @@
 			
 			$DSP->extra_css = $_SERVER['DOCUMENT_ROOT'].'/'.$PREFS->default_ini['system_folder'].'/modules/helmsman/css/styles.css';
 			
-			$DSP->body .= '<script type="text/javascript" src="'.$PREFS->core_ini['site_url'].$PREFS->default_ini['system_folder'].'/modules/helmsman/js/jquery-1.3.1.min.js"></script>
+			$DSP->body .= '<script type="text/javascript" src="'.$PREFS->core_ini['site_url'].$PREFS->default_ini['system_folder'].'/modules/helmsman/js/jquery-1.3.2.min.js"></script>
 			<script type="text/javascript" src="'.$PREFS->core_ini['site_url'].$PREFS->default_ini['system_folder'].'/modules/helmsman/js/interface_1_2/interface.js"></script>
 			<script type="text/javascript" src="'.$PREFS->core_ini['site_url'].$PREFS->default_ini['system_folder'].'/modules/helmsman/js/inestedsortable-1.0.1.pack.js"></script>
 			<script type="text/javascript" src="'.$PREFS->core_ini['site_url'].$PREFS->default_ini['system_folder'].'/modules/helmsman/js/scripts.js"></script>'.
@@ -74,7 +74,7 @@
 				}
 			</script>'.
 				$DSP->qdiv('longWrapper',
-					$DSP->qdiv('add-new-item', '<a href="javascript:void(0);">Add another navigation item.</a>').
+					$DSP->qdiv('add-new-item', '<a href="javascript:void(0);"><span>Add Another Navigation Item</span></a>').
 					$open_form.
 					$this->output_navigation_items_forms($navigation_items, $counter, $depth)
 				);

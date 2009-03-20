@@ -27,6 +27,13 @@
 	text-indent: -9999px;
 }
 
+ol#master-list {
+	margin: 0;
+	padding: 0;
+	border-left: 1px solid #CAD0D5;
+	border-right: 1px solid #CAD0D5;
+}
+
 ol#master-list ol {
 	margin-top: 5px;
 	padding-bottom: 5px;
@@ -50,7 +57,7 @@ a.handlebar img {
 	position: relative;
 	top: 3px;
 	padding-left: 20px;
-	padding-right: 5px;
+	padding-right: 8px;
 }
 
 a.lock img {
@@ -74,26 +81,44 @@ a.delete-link img {
 }*/
 
 .add-new-item a {
+    background: transparent url(http://genome.paradowski.com/themes/cp_themes/default/images/bg_button_a.gif) no-repeat scroll top right;
+    color: #fff;
+    display: block;
+    font: bold 12px arial, sans-serif;
+    height: 27px;
+    margin: 0 0 10px 0;
+    padding-right: 20px; 
+    text-decoration: none;
+	outline: none;
+	overflow: hidden;
 	float: right;
-	display: block;
-	text-indent: -9999px;
-	width: 10px;
-	height: 10px;
-	background: transparent url(/themes/cp_global_images/add.png);
-	margin-right: 1%;
 }
-
+.add-new-item a div,
+.add-new-item a span {
+    background: transparent url(http://genome.paradowski.com/themes/cp_themes/default/images/bg_button_div.gif) no-repeat;
+    display: block;
+    line-height: 17px;
+    padding: 5px 0 5px 20px;
+}
 .add-new-item a:active {
-	border: 0;
+    background-position: bottom right;
+    color: #fff;
+    outline: none; 
+}
+.add-new-item a:active div,
+.add-new-item a:active span {
+    background-position: bottom left;
+    padding: 6px 0 4px 20px; 
 }
 
 ol#master-list li {
-	padding: 5px 0 5px 5px;
+	padding: 8px 0 7px 8px;
 	background-color: #fff;
+	border-bottom: 1px solid #CAD0D5;
 }
 
 ol#master-list li ol li {
-	padding: 5px 0 5px 5px;
+	padding: 8px 0 7px 8px;
 	background-color: #fff;
 }
 
@@ -103,10 +128,22 @@ ol#master-list li.alt {
 
 ol#master-list li ol li {
 	background-color: #fff;
+	border-bottom: 1px solid #dde1e5;
 }
 
 ol#master-list li ol li.sectionalt {
 	background-color: #eef4f9;
+}
+
+.longWrapper .top-labels {
+	background: url(/images/title_background.gif) #768e9d repeat-x left bottom;
+	padding: 7px 0;
+	clear: right;
+}
+
+.longWrapper .title-label, .longWrapper .link-label {
+	color: #fff;
+	font-weight: bold;
 }
 
 .longWrapper .top-labels .title-label {
@@ -121,10 +158,10 @@ ol#master-list li ol li.sectionalt {
 }
 
 .longWrapper .submit {
-	margin-left: 50px;
+	margin: 15px 0 0 10px;
 	width: 100px;
 }
 
 .dropzone {
-	border-top: 3px solid #999;
+	border-top: 3px solid #CAD0D5;
 }
