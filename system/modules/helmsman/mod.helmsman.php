@@ -73,6 +73,7 @@
 					if(!$currently_open) {
 						$currently_open = $this->contains_currently_open($sections);
 					}
+					
 					if($depth>=$this->collapse_level && !$currently_open) {
 						$return .= ' '.$this->prefix.'closed-section';
 					} else if($currently_open && $depth!=1) {
@@ -95,7 +96,7 @@
 				if($section_counter==1) { $return .= 'first '; } else if($section_counter==$section_total) { $return .= 'last '; }
 				
 				$test_items = explode('/', rtrim($section['slug'], '/'));
-				if(rtrim($this->current, '/')==rtrim($section['url'], '/') || $this->current==$section['slug'] || (isset($IN->SEGS[1]) && $IN->SEGS[1]==$test_items[0])) $return .= 'current ';
+				if(rtrim($this->current, '/')==rtrim($section['url'], '/') || $this->current==$section['slug'] || (isset($IN->SEGS[1]) && $IN->SEGS[1]==$test_items[0]) || $section['slug']==$this->currently_open) $return .= 'current ';
 				
 				if(isset($section['children']) && count($section['children'])>0 && $this->void) {
 					$link = 'javascript:void(0);';
@@ -112,7 +113,10 @@
  					$return .= ' id="'.$this->prefix.$section['slug'].'"';
 				}
 				$return .= '>
-						<a href="'.$link.'"><span>'.$section['html_title'].'</span></a>'."\r\n";
+						<a href="'.$link.'"><span>'.$section['html_title'].'</span></a>';
+				if($section_counter < $section_total && $depth>0)$return.='|';
+				
+				$return .= "\r\n";
 				
 				$counter++;
 				if(isset($section['children']) && count($section['children'])>0 && !$this->separate_menus) {
