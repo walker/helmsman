@@ -54,7 +54,7 @@
 					  'name'	=> 'nav_form',
 					  'id'		=> 'nav_form'
 					 )
-			 );
+			);
 			
 			$navigation_items = $this->get_navigation_array();
 			
@@ -74,9 +74,10 @@
 				}
 			</script>'.
 				$DSP->qdiv('longWrapper',
-					$DSP->qdiv('add-new-item', '<a href="javascript:void(0);"><span>Add Another Navigation Item</span></a>').
+					$DSP->qdiv('add-new-item', '<a href="javascript:void(0);"><span>Add Another Navigation Item</span></a>', 'add-new-item-top').
 					$open_form.
-					$this->output_navigation_items_forms($navigation_items, $counter, $depth)
+					$this->output_navigation_items_forms($navigation_items, $counter, $depth).
+					$DSP->qdiv('add-new-item', '<a href="javascript:void(0);"><span>Add Another Navigation Item</span></a>', 'add-new-item-bottom')
 				);
 		}
 		

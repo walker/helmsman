@@ -9,9 +9,17 @@ jQuery(document).ready(function() {
 		
 		if(jQuery('#master-list').children('li').children('input').attr('readonly')==true) {
 			var the_level = jQuery('.sub-list:last').children('li:last').children('div.hidden').children('input').attr('value');
-			jQuery('.sub-list:last').append(returnNewItem(num, the_level));
+			if(jQuery(this).parent().attr('id')=='add-new-item-top') {
+				jQuery('.sub-list:first').append(returnNewItem(num, the_level));
+			} else {
+				jQuery('.sub-list:last').append(returnNewItem(num, the_level));
+			}
 		} else {
-			jQuery('#master-list').append(returnNewItem(num, 0));
+			if(jQuery(this).parent().attr('id')=='add-new-item-top') {
+				jQuery('#master-list').prepend(returnNewItem(num, 0));
+			} else {
+				jQuery('#master-list').append(returnNewItem(num, 0));
+			}
 		}
 		jQuery('#current-count').html(num_inc);
 		bindInputKeypresses();
