@@ -7,7 +7,7 @@
 * /system/modules/helmsman folder in your ExpressionEngine installation.
 *
 * @package HelmsmanCP
-* @version Version 1.0.6
+* @version Version 1.0.5
 * @author Walker Hamilton <http://walkerhamilton.com>
 * @see http://walkerhamilton.com/helmsman/
 * @license See LICENSE.TXT with this package
