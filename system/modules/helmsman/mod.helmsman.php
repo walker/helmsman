@@ -132,6 +132,16 @@
 			return $return;
 		}
 		
+		/**
+		 * Recursive function that outputs the sub-navigation list (added for split nav output)
+		 *
+		 * @access	public
+		 * @param	array $sections that contains the current level's navigation items
+		 * @param	int $counter the overall counter for navigation items
+		 * @param	int $depth number that tells function the current depth of the navigation
+		 * @param	boolean optional $currently_open tells the function if the current section needs is already set to open
+		 * @return	string
+		 */
 		function construct_sub_menu($sections, &$counter, $depth, $currently_open=false) {
 			global $IN;
 			$return = '';

@@ -1,5 +1,17 @@
 <?php
 
+/**
+* Class File for Helmsman
+* 
+* This file must be placed in the
+* /system/modules/helmsman folder in your ExpressionEngine installation.
+*
+* @package HelmsmanCP
+* @version Version 1.0.6
+* @author Walker Hamilton <http://walkerhamilton.com>
+* @see http://walkerhamilton.com/helmsman/
+* @license See LICENSE.TXT with this package
+*/
 	class Helmsman_CP
 	{
 		//Version of Helmsman Control Panel
