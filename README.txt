@@ -1,6 +1,5 @@
 Installation:
-	1. Place the language/english/lang.helmsman.php file in /<system folder>/language/english/
-	2. Place the modules/helmsman folder  from this package into /<system folder>/modules/
+	Place the helsman folder in /<system folder>/expressionengine/third_party
 
 Back-end Management
 	
