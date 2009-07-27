@@ -175,8 +175,6 @@
 		{
 			$navigation = array();
 			
-			error_log(var_export($query, true));
-			
 			foreach($query->result_array() as $nav_item) {
 				$navigation[$nav_item['helmsman_id']] = array(
 					"title" => $nav_item['title'],
