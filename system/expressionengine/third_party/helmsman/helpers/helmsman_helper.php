@@ -64,7 +64,7 @@ if(! function_exists('output_navigation_items_forms'))
 			$counter++;
 			if(isset($section['children']) && count($section['children'])>0) {
 				$pass_depth = $depth+1;
-				$return .= $this->output_navigation_items_forms($section['children'], $counter, $pass_depth)."\r\n";
+				$return .= output_navigation_items_forms($section['children'], $counter, $pass_depth)."\r\n";
 			}
 			$return .= '</li>'."\r\n";
 			$section_counter++;
@@ -87,7 +87,7 @@ if(! function_exists('output_navigation_items_forms'))
 
 if(! function_exists('input_extras')) {
 	/**
-	 * Function that currently sets only one extra option, but could handle others. Currently sets the read-only status on inputs if $this->top_level_lock is on
+	 * Function that currently sets only one extra option, but could handle others. Currently sets the read-only status on inputs if $top_level_lock is on
 	 *
 	 * @access	public
 	 * @param	int $depth number that tells function the current depth of the navigation

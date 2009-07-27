@@ -81,11 +81,12 @@ class Helmsman_upd {
 		if ($current < 2.0)
 		{
 			// Do your 2.0 version update queries
+			// nothing to do here...
 		}
-		if ($current < 3.0)
-		{
-			// Do your 3.0 v. update queries
-		}
+		// if ($current < 3.0)
+		// {
+		// 	// Do your 3.0 v. update queries
+		// }
 
 		return TRUE;
 	}

@@ -8,20 +8,20 @@
 		 * @access	public
 		 * @return	string
 		 */
-		function Helmsman()
+		function __construct()
 		{
 			$this->EE =& get_instance();
 			/* Construct Items */
-			$this->collapse_level = ($this->EE->tmpl->fetch_param('collapse_level')!==false) ? $this->EE->tmpl->fetch_param('collapse_level') : null;
-			$this->separate_menus = ($this->EE->tmpl->fetch_param('separate')!==false) ? true : false;
-			$this->sub_menu = ($this->EE->tmpl->fetch_param('is_sub')!==false) ? true : false;
+			$this->collapse_level = ($this->EE->TMPL->fetch_param('collapse_level')!==false) ? $this->EE->TMPL->fetch_param('collapse_level') : null;
+			$this->separate_menus = ($this->EE->TMPL->fetch_param('separate')!==false) ? true : false;
+			$this->sub_menu = ($this->EE->TMPL->fetch_param('is_sub')!==false) ? true : false;
 			settype($this->collapse_level, "integer");
 			
-			$this->void = ($this->EE->tmpl->fetch_param('void')) ? true : false;
-			$this->currently_open = ($this->EE->tmpl->fetch_param('currently_open')) ? $this->EE->tmpl->fetch_param('currently_open') : null;
-			$this->display_type = ($this->EE->tmpl->fetch_param('display_type')=='ol') ? 'ol' : 'ul';
-			$this->prefix = ($this->EE->tmpl->fetch_param('prefix')) ? 'helm-' : '';
-			$this->current = ($this->EE->tmpl->fetch_param('current')) ? $this->EE->tmpl->fetch_param('current') : $_SERVER['REQUEST_URI'];
+			$this->void = ($this->EE->TMPL->fetch_param('void')) ? true : false;
+			$this->currently_open = ($this->EE->TMPL->fetch_param('currently_open')) ? $this->EE->TMPL->fetch_param('currently_open') : null;
+			$this->display_type = ($this->EE->TMPL->fetch_param('display_type')=='ol') ? 'ol' : 'ul';
+			$this->prefix = ($this->EE->TMPL->fetch_param('prefix')) ? 'helm-' : '';
+			$this->current = ($this->EE->TMPL->fetch_param('current')) ? $this->EE->TMPL->fetch_param('current') : $_SERVER['REQUEST_URI'];
 			
 			$this->nav_array = $this->get_navigation_array();
 			
@@ -32,13 +32,18 @@
 			return $this->return_data;
 		}
 
+		function Helmsman() {
+			$this->__construct();
+		}
+
 		/**
 		 * Constructor class that makes sure Helmsman is set up and ready
 		 *
 		 * @access	public
 		 * @return	string
 		 */
-		function construct_menu() {
+		function construct_menu()
+		{
 			$counter = 0;
 			$depth = 0;
 
@@ -59,7 +64,8 @@
 		 * @param	boolean optional $currently_open tells the function if the current section needs is already set to open
 		 * @return	string
 		 */
-		function items($sections, &$counter, $depth, $currently_open=false) {
+		function items($sections, &$counter, $depth, $currently_open=false)
+		{
 			if($depth==0) {
 				$return = '<'.$this->display_type.' id="'.$this->prefix.'navMain">'."\r\n";
 			} else {
@@ -127,7 +133,8 @@
 			return $return;
 		}
 
-		function construct_sub_menu($sections, &$counter, $depth, $currently_open=false) {
+		function construct_sub_menu($sections, &$counter, $depth, $currently_open=false)
+		{
 			$return = '';
 			foreach($sections as $key => $section) {
 				$test_items = explode('/', trim($section['url'], '/'));
@@ -150,11 +157,11 @@
 		 */
 		function get_navigation_array()
 		{
-			$result = $this->EE->db->query("SELECT parent_id FROM `exp_helmsman` WHERE parent_id<>0 GROUP BY parent_id");
-
-			$top_level = $EE->db->query("SELECT * FROM `exp_helmsman` WHERE parent_id=0 ORDER BY sequence ASC");
-
-			return $this->get_navigation_iterator($top_level->result);
+			// $result = $this->EE->db->query("SELECT parent_id FROM `exp_helmsman` WHERE `parent_id`<>0 GROUP BY `parent_id`");
+			
+			$top_level = $this->EE->db->query("SELECT * FROM `exp_helmsman` WHERE `parent_id`=0 ORDER BY sequence ASC");
+			
+			return $this->get_navigation_iterator($top_level);
 		}
 
 		/**
@@ -164,22 +171,25 @@
 		 * @param	array $sections that contains the current level's navigation items
 		 * @return	array
 		 */
-		function get_navigation_iterator($results) {
+		function get_navigation_iterator($query)
+		{
 			$navigation = array();
-
-			foreach($results as $nav_item) {
-				$navigation[$nav_item['id']] = array(
+			
+			error_log(var_export($query, true));
+			
+			foreach($query->result_array() as $nav_item) {
+				$navigation[$nav_item['helmsman_id']] = array(
 					"title" => $nav_item['title'],
 					"html_title" => $nav_item['html_title'],
 					"url" => $nav_item['url'],
 					"slug" => $nav_item['slug'],
 				);
-				$children = $EE->db->query("SELECT * FROM `exp_helmsman` WHERE parent_id=".$nav_item['id']." ORDER BY sequence ASC");
-				if(count($children->result)>0) {
-					$navigation[$nav_item['id']]['children'] = $this->get_navigation_iterator($children->result);
+				$children = $this->EE->db->query("SELECT * FROM `exp_helmsman` WHERE parent_id=".$nav_item['helmsman_id']." ORDER BY sequence ASC");
+				if(count($children->num_rows)>0) {
+					$navigation[$nav_item['helmsman_id']]['children'] = $this->get_navigation_iterator($children);
 				}
 			}
-
+			
 			return $navigation;
 		}
 
